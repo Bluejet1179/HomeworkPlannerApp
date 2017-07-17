@@ -1,7 +1,9 @@
 package com.rflora.homeworkplannerapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -77,11 +79,58 @@ public class AssignmentAdapter extends BaseAdapter {
         holder.mLength.setText(Double.toString(assignment.getLength()) + "hrs");
         holder.mDateDue.setText(assignment.getDateDue().month + "/" + assignment.getDateDue().monthDay);
         holder.mComplete.setMax(100);
-        assignment.setComplete(holder.mComplete.getProgress());
+        attachProgressUpdatedListener(holder.mComplete, assignment);
+        holder.mComplete.setProgress(assignment.isComplete());
+
 
 
 
         return view;
     }
 
+    private void attachProgressUpdatedListener(SeekBar seekBar, final Assignment assignment) {
+        final int prev = seekBar.getProgress();
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(final SeekBar seekBar, int i, boolean b) {
+
+                Log.d("Seek", Integer.toString(seekBar.getProgress()) + " ID: " + assignment.getId());
+                assignment.setComplete(seekBar.getProgress());
+                db.updateAssignment(assignment);
+                if(seekBar.getProgress() == 100){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                    builder.setMessage("Are you sure you want to delete " + assignment.getName() + "?");
+                    builder.setTitle("Warning!");
+                    builder.setIcon(R.drawable.ic_delete_forever_black_24dp);
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            db.deleteAssignment(assignment);
+                            notifyDataSetChanged();
+                        }
+                    });
+
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            seekBar.setProgress(prev);
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+    }
 }

@@ -51,7 +51,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_ASSIGNMENTS_TABLE = "CREATE TABLE " + TABLE_ASSIGNMENTS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + KEY_NAME + " TEXT,"
                 + KEY_DESCRIPTION + " TEXT,"
                 + KEY_DAYDUE + " INTEGER,"
@@ -164,6 +164,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_ASSIGNMENTS, KEY_ID + " = ?",
                 new String[] { String.valueOf(assignment.getId()) });
+        
         db.close();
     }
 

@@ -89,6 +89,7 @@
                 android:id="@+id/completeView"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:focusable="false"
                 android:thumbTint="@color/colorPrimary"/>
         </LinearLayout>
 

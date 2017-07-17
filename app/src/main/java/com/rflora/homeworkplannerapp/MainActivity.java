@@ -34,12 +34,12 @@ public class MainActivity extends AppCompatActivity {
         //time.set(12,5,2017);
         time.setToNow();
         Log.d("SQL", "Date before SQL =" + (time.month+1) +  "/" + time.monthDay);
-        databaseHandler.addAssignment(new Assignment("Read", "pages 123", time, 1.5, "English", 0));
-        databaseHandler.addAssignment(new Assignment("TextBook", "pages 796", time, 2, "Math", 50));
-        Assignment test = databaseHandler.getAssignment(1);
-        Assignment test2 = databaseHandler.getAssignment(2);
-        Log.d("SQL", test.toString());
-        Log.d("SQL", test2.toString());
+        //databaseHandler.addAssignment(new Assignment("Read", "pages 123", time, 1.5, "English", 0));
+        //databaseHandler.addAssignment(new Assignment("TextBook", "pages 796", time, 2, "Math", 0));
+//        Assignment test = databaseHandler.getAssignment(1);
+  //      Assignment test2 = databaseHandler.getAssignment(2);
+    //    Log.d("SQL", test.toString());
+      //  Log.d("SQL", test2.toString());
         //databaseHandler.deleteAllAssignments();
 
     }
@@ -51,12 +51,12 @@ public class MainActivity extends AppCompatActivity {
         mAssignment_ListView.setAdapter(mAdapter);
         mAssignments = databaseHandler.getAllAssignments();
 
-
+/*
         int size = mAssignment_ListView.getCount();
-        for(int i = 0; i < size; i++) {
+        for(int i = 1; i < size; i++) {
             final Assignment assignment = mAssignments.get(i);
             View view = mAssignment_ListView.getChildAt(i);
-            SeekBar seekBar1 = (SeekBar) findViewById(R.id.completeView);
+            SeekBar seekBar1 = (SeekBar) view.findViewById(R.id.completeView);
             seekBar1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -75,9 +75,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+        */
 
 
 
+
+        mAssignment_ListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("Seek", "You clicked ");
+                Assignment a = (Assignment) adapterView.getItemAtPosition(i);
+            }
+        });
     }
 
 
