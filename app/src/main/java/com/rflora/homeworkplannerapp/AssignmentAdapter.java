@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -76,7 +77,12 @@ public class AssignmentAdapter extends BaseAdapter {
         holder.mName.setText(name);
         holder.mDescription.setText(assignment.getDescription());
         holder.mSubject.setText(assignment.getSubject());
-        holder.mLength.setText(Double.toString(assignment.getLength()) + "hrs");
+
+        if(assignment.getLength() <= 1.0){
+            holder.mLength.setText(Double.toString(assignment.getLength()) + " hr");
+        }else {
+            holder.mLength.setText(Double.toString(assignment.getLength()) + " hrs");
+        }
         holder.mDateDue.setText(assignment.getDateDue().month + "/" + assignment.getDateDue().monthDay);
         holder.mComplete.setMax(100);
         attachProgressUpdatedListener(holder.mComplete, assignment);
@@ -89,7 +95,6 @@ public class AssignmentAdapter extends BaseAdapter {
     }
 
     private void attachProgressUpdatedListener(SeekBar seekBar, final Assignment assignment) {
-        final int prev = seekBar.getProgress();
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(final SeekBar seekBar, int i, boolean b) {
@@ -105,15 +110,18 @@ public class AssignmentAdapter extends BaseAdapter {
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            db.deleteAssignment(assignment);
+                            String name = assignment.getName();
+
+                            //db.deleteAssignment(assignment);
+
                             notifyDataSetChanged();
+                            Toast.makeText(mActivity.getApplicationContext(),"Deleted " + name,Toast.LENGTH_SHORT).show();
                         }
                     });
 
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            seekBar.setProgress(prev);
                         }
                     });
                     AlertDialog alert = builder.create();

@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
         //time.set(12,5,2017);
         time.setToNow();
         Log.d("SQL", "Date before SQL =" + (time.month+1) +  "/" + time.monthDay);
-        //databaseHandler.addAssignment(new Assignment("Read", "pages 123", time, 1.5, "English", 0));
-        //databaseHandler.addAssignment(new Assignment("TextBook", "pages 796", time, 2, "Math", 0));
+        databaseHandler.addAssignment(new Assignment("Read", "pages 123", time, 1.5, "English", 0));
+        databaseHandler.addAssignment(new Assignment("TextBook", "pages 796", time, 0.5, "Math", 0));
 //        Assignment test = databaseHandler.getAssignment(1);
   //      Assignment test2 = databaseHandler.getAssignment(2);
     //    Log.d("SQL", test.toString());

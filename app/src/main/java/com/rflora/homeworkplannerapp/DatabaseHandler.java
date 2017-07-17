@@ -23,6 +23,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
+    private static int mID = 0;
+
     // Database Name
     private static final String DATABASE_NAME = "assignmentBook";
 
@@ -77,6 +79,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Adding new assignment
     public void addAssignment(Assignment assignment) {
         SQLiteDatabase db = this.getWritableDatabase();
+
 
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, assignment.getName());
@@ -164,7 +167,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_ASSIGNMENTS, KEY_ID + " = ?",
                 new String[] { String.valueOf(assignment.getId()) });
-        
+
         db.close();
     }
 
