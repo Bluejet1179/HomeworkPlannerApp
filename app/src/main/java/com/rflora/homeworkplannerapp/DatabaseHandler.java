@@ -11,6 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.attr.id;
 import static android.provider.Contacts.SettingsColumns.KEY;
 
 /**
@@ -32,7 +33,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_ASSIGNMENTS = "Assignments";
 
     // Contacts Table Columns names
-    private static final String KEY_ID = "id";
+    private static final String KEY_ID = "_id";
     private static final String KEY_NAME = "name";
     private static final String KEY_DESCRIPTION = "descrption";
     //private static final String KEY_DAYDUE = "dayDue";
@@ -53,7 +54,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_ASSIGNMENTS_TABLE = "CREATE TABLE " + TABLE_ASSIGNMENTS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_NAME + " TEXT,"
                 + KEY_DESCRIPTION + " TEXT,"
                 + KEY_DAYDUE + " INTEGER,"
@@ -97,18 +98,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Log.d("SQL", "Added Assignment");
     }
 
+    public Cursor getCursor(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT  * FROM " + TABLE_ASSIGNMENTS;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+
+        Log.d("SQL", "Cursor size " + cursor.getCount());
+
+        return cursor;
+    }
+
 
     // Getting single assignment
     public Assignment getAssignment(int id) {
         Log.d("SQL", "Attempting to get assignment");
         SQLiteDatabase db = this.getReadableDatabase();
         Time dateDue = new Time();
-
         Cursor cursor = db.query(TABLE_ASSIGNMENTS,
                 new String[] { KEY_ID, KEY_NAME, KEY_DESCRIPTION, KEY_DAYDUE, KEY_MONTHDUE, KEY_YEARDUE, KEY_LENGTH, KEY_SUBJECT, KEY_ISCOMPLETE },
                 KEY_ID + "=?",
                 new String[] { String.valueOf(id) },
                 null, null, null, null);
+
         Log.d("SQL", "Made cursor");
         if (cursor != null) {
             cursor.moveToFirst();
