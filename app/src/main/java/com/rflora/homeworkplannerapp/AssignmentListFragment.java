@@ -23,6 +23,7 @@ public class AssignmentListFragment extends Fragment {
     private AssignmentDatabaseHandler databaseHandler;
     private RecyclerView mRecyclerView;
     private RecyclerAdapterAssignment mAdapterAssignment;
+    public TextView no_HW;
 
     public AssignmentListFragment() {
         // Required empty public constructor
@@ -36,7 +37,7 @@ public class AssignmentListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         databaseHandler = new AssignmentDatabaseHandler(getActivity());
-        mAdapterAssignment = new RecyclerAdapterAssignment(databaseHandler);
+        mAdapterAssignment = new RecyclerAdapterAssignment(databaseHandler, this);
         super.onCreate(savedInstanceState);
 
     }
@@ -47,7 +48,7 @@ public class AssignmentListFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_assignment_list, container, false);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_viewf);
-        TextView no_HW = (TextView) v.findViewById(R.id.no_hw_view);
+        no_HW = (TextView) v.findViewById(R.id.no_hw_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setAdapter(mAdapterAssignment);
@@ -58,7 +59,14 @@ public class AssignmentListFragment extends Fragment {
         mRecyclerView.addItemDecoration(itemDecoration);
         if(mAdapterAssignment.getItemCount() == 0){
             no_HW.setVisibility(View.VISIBLE);
+        }else {
+            no_HW.setVisibility(View.GONE);
         }
+
+
+
+
+
 
 
 
@@ -68,7 +76,7 @@ public class AssignmentListFragment extends Fragment {
 
     public void addAssignment(Assignment assignment){
         databaseHandler.addAssignment(assignment);
-        mAdapterAssignment.notifyDataSetChanged();
+        mAdapterAssignment.updateList();
     }
 
 
@@ -99,6 +107,10 @@ public class AssignmentListFragment extends Fragment {
         super.onResume();
         mAdapterAssignment.notifyDataSetChanged();
         mRecyclerView.requestLayout();
+    }
+
+    public int size(){
+       return mAdapterAssignment.getItemCount();
     }
 
     /**

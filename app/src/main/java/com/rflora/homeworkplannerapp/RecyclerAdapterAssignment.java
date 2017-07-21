@@ -1,5 +1,7 @@
 package com.rflora.homeworkplannerapp;
 
+import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Time;
 import android.view.LayoutInflater;
@@ -14,7 +16,7 @@ import java.util.List;
 public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdapterAssignment.ViewHolder> {
     private List<Assignment> mAssignments;
     private AssignmentDatabaseHandler mDatabaseHandler;
-
+    private AssignmentListFragment mAssignmentListFragment;
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -41,10 +43,11 @@ public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdap
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerAdapterAssignment(AssignmentDatabaseHandler db) {
+    public RecyclerAdapterAssignment(AssignmentDatabaseHandler db, AssignmentListFragment a) {
         mDatabaseHandler = db;
         mAssignments = db.getAllAssignments();
         setHasStableIds(true);
+        mAssignmentListFragment = a;
     }
 
     // Create new views (invoked by the layout manager)
@@ -84,7 +87,16 @@ public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdap
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(holder.mComplete.getProgress() == 100){
                     mAssignments.remove(position);
+                    updateDatabase();
                     notifyDataSetChanged();
+                    if(getItemCount() == 0) {
+                        mAssignmentListFragment.no_HW.setVisibility(View.VISIBLE);
+                    }else {
+                        mAssignmentListFragment.no_HW.setVisibility(View.GONE);
+                    }
+                    Snackbar.make(holder.itemView, "Removed Assignment", Snackbar.LENGTH_SHORT).show();
+
+
                 }else {
                     mAssignments.get(position).setComplete(holder.mComplete.getProgress());
                 }
@@ -116,7 +128,12 @@ public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdap
         return mAssignments.size();
     }
     public void updateDatabase(){
+        mDatabaseHandler.deleteAllAssignments();
         mDatabaseHandler.addAssignments(mAssignments);
+        notifyDataSetChanged();
+    }
+    public void updateList(){
+        mAssignments = mDatabaseHandler.getAllAssignments();
         notifyDataSetChanged();
     }
 }

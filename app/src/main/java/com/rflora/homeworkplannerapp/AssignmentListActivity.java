@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -34,6 +36,8 @@ public class AssignmentListActivity extends AppCompatActivity {
     private AssignmentDatabaseHandler databaseHandler;
     private RecyclerView mRecyclerView;
     private RecyclerAdapterAssignment mAdapterAssignment;
+    private FloatingActionButton addButton;
+    private AssignmentListFragment mAssignmentfragment;
 
 
     @Override
@@ -41,17 +45,31 @@ public class AssignmentListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        addButton = (FloatingActionButton) findViewById(R.id.add_assignment_button);
         setSupportActionBar(myToolbar);
         Log.d("Activity", "Starting...");
         databaseHandler = new AssignmentDatabaseHandler(getApplicationContext());
-        mAdapterAssignment = new RecyclerAdapterAssignment(databaseHandler);
+        mAssignmentfragment = new AssignmentListFragment();
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Time time = new Time();
+                time.setToNow();
+                mAssignmentfragment.addAssignment(new Assignment("Read", "pages 123", time, 1.5, "English", 0));
+                Snackbar.make(v,"Added Assignment", Snackbar.LENGTH_SHORT).show();
+                if(mAssignmentfragment.size() == 0){
+                    mAssignmentfragment.no_HW.setVisibility(View.VISIBLE);
+                }else {
+                    mAssignmentfragment.no_HW.setVisibility(View.GONE);
+                }
+            }
+        });
 
 
 
 
-        Time time = new Time();
-        time.setToNow();
-        databaseHandler.addAssignment(new Assignment("Read", "pages 123", time, 1.5, "English", 0));
+
         //databaseHandler.addAssignment(new Assignment("TextBook", "pages 796", time, 0.5, "Math", 0));
         //databaseHandler.deleteAllAssignments();
 
@@ -65,10 +83,9 @@ public class AssignmentListActivity extends AppCompatActivity {
 
 
 
-        AssignmentListFragment fragment = new AssignmentListFragment();
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_rel_container, fragment)
+                .replace(R.id.fragment_rel_container, mAssignmentfragment)
                 .commit();
 
 
@@ -88,11 +105,7 @@ public class AssignmentListActivity extends AppCompatActivity {
                 // User chose the "Settings" item, show the app settings UI...
                 return true;
 
-            case R.id.action_add_assignment:
-                // User chose the "add" action, mark the current item
-                Intent addIntent = new Intent(AssignmentListActivity.this, AddAssignmentActivity.class);
-                startActivity(addIntent);
-                return true;
+
 
             default:
                 // If we got here, the user's action was not recognized.
