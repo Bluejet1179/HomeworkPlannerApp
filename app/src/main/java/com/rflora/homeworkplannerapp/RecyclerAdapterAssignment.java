@@ -1,6 +1,7 @@
 package com.rflora.homeworkplannerapp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Time;
@@ -78,7 +79,16 @@ public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdap
             holder.mLength.setText(Double.toString(mAssignments.get(position).getLength()) + " hrs");
         }
         Time time = mAssignments.get(position).getDateDue();
-        holder.mDateDue.setText(time.month + "/" + time.monthDay);
+
+        Time currentTime = new Time();
+        currentTime.setToNow();
+        if(currentTime.month == time.month && currentTime.monthDay == time.monthDay){
+            holder.mDateDue.setText("Due Today!");
+            holder.mDateDue.setTextColor(Color.RED);
+        }else{
+            holder.mDateDue.setText(time.month + "/" + time.monthDay);
+            holder.mDateDue.setTextColor(Color.BLACK);
+        }
         holder.mComplete.setMax(100);
         holder.mComplete.setProgress(mAssignments.get(position).isComplete());
 
@@ -88,7 +98,6 @@ public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdap
                 if(holder.mComplete.getProgress() == 100){
                     mAssignments.remove(position);
                     updateDatabase();
-                    notifyDataSetChanged();
                     if(getItemCount() == 0) {
                         mAssignmentListFragment.no_HW.setVisibility(View.VISIBLE);
                     }else {
@@ -109,7 +118,7 @@ public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdap
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                updateDatabase();
 
 
             }
