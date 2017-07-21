@@ -1,7 +1,10 @@
 package com.rflora.homeworkplannerapp;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -18,7 +21,7 @@ import static android.provider.Contacts.SettingsColumns.KEY;
  * Created by flora on 7/8/2017.
  */
 
-public class DatabaseHandler extends SQLiteOpenHelper {
+public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
@@ -46,7 +49,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_SUBJECT = "subject";
     private static final String KEY_ISCOMPLETE = "isComplete";
 
-    public DatabaseHandler(Context context) {
+    public AssignmentDatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -77,6 +80,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void addAssignments(List<Assignment> list){
+        deleteAllAssignments();
+        SQLiteDatabase db = this.getWritableDatabase();
+        for(Assignment assignment: list){
+
+
+            ContentValues values = new ContentValues();
+            values.put(KEY_NAME, assignment.getName());
+            values.put(KEY_DESCRIPTION, assignment.getDescription());
+            values.put(KEY_DAYDUE, assignment.getDateDue().monthDay);
+            values.put(KEY_MONTHDUE, assignment.getDateDue().month);
+            values.put(KEY_YEARDUE, assignment.getDateDue().year);
+            values.put(KEY_LENGTH, assignment.getLength());
+            values.put(KEY_SUBJECT, assignment.getSubject());
+            values.put(KEY_ISCOMPLETE, assignment.isComplete());
+
+            // Inserting Row
+            db.insert(TABLE_ASSIGNMENTS, null, values);
+            Log.d("SQL", "Added Assignment");
+
+        }
+        db.close(); // Closing database connection
+    }
+
     // Adding new assignment
     public void addAssignment(Assignment assignment) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -96,6 +123,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_ASSIGNMENTS, null, values);
         db.close(); // Closing database connection
         Log.d("SQL", "Added Assignment");
+
+
+
     }
 
     public Cursor getCursor(){
@@ -208,6 +238,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         for(Assignment assignment: assignmentList){
             deleteAssignment(assignment);
         }
+
     }
 
 

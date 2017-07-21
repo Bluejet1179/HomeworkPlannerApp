@@ -1,9 +1,14 @@
 package com.rflora.homeworkplannerapp;
 
 import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.Time;
 import android.util.Log;
@@ -21,13 +26,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static android.R.attr.fragment;
+
 public class AssignmentListActivity extends AppCompatActivity {
 
    // private AssignmentAdapter mAdapter;
-    private ListView mAssignment_ListView;
-    private DatabaseHandler databaseHandler;
+    private AssignmentDatabaseHandler databaseHandler;
+    private RecyclerView mRecyclerView;
+    private RecyclerAdapterAssignment mAdapterAssignment;
 
-    private AssignmentCursorAdapter mCursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,28 +43,35 @@ public class AssignmentListActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         Log.d("Activity", "Starting...");
-        databaseHandler = new DatabaseHandler(getApplicationContext());
-        mAssignment_ListView = (ListView) findViewById(R.id.assignment_ListView);
+        databaseHandler = new AssignmentDatabaseHandler(getApplicationContext());
+        mAdapterAssignment = new RecyclerAdapterAssignment(databaseHandler);
+
+
+
+
         Time time = new Time();
         time.setToNow();
         databaseHandler.addAssignment(new Assignment("Read", "pages 123", time, 1.5, "English", 0));
-        databaseHandler.addAssignment(new Assignment("TextBook", "pages 796", time, 0.5, "Math", 0));
-       // Assignment test = databaseHandler.getAssignment(1);
-  //      Assignment test2 = databaseHandler.getAssignment(2);
-    //  Log.d("SQL", test.toString());
-      //  Log.d("SQL", test2.toString());
+        //databaseHandler.addAssignment(new Assignment("TextBook", "pages 796", time, 0.5, "Math", 0));
         //databaseHandler.deleteAllAssignments();
+
+
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-       // mAdapter = new AssignmentAdapter(this, databaseHandler);
-        //mAssignment_ListView.setAdapter(mAdapter);
 
-        mCursorAdapter = new AssignmentCursorAdapter(AssignmentListActivity.this, databaseHandler.getCursor(), databaseHandler, this, mAssignment_ListView);
-        mAssignment_ListView.setAdapter(mCursorAdapter);
+
+
+        AssignmentListFragment fragment = new AssignmentListFragment();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_rel_container, fragment)
+                .commit();
+
+
 
     }
     @Override

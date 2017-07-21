@@ -2,97 +2,115 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="false"
                 android:layout_centerInParent="false"
                 android:layout_centerVertical="false"
                 android:orientation="vertical"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp"
+
                 app:layout_goneMarginRight="10dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/nameView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.14"
-                android:text="Name"
-                android:textColor="@android:color/black"
-                android:textSize="24sp"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:animateLayoutChanges="true"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="20dp"
+        >
 
-        <TextView
-            android:id="@+id/dateView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="right"
-            android:gravity="right"
-            android:text="Date Due"
-            android:textSize="18sp"/>
-
-        <TextView
-            android:id="@+id/subjectView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingTop="5dp"
-            android:text="Subject"/>
-
-        <TextView
-            android:id="@+id/descriptionView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/nameView"
-            android:paddingTop="5dp"
-            android:text="Description"
-            android:textColor="#34495e"
-            android:textSize="18sp"/>
-
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/lengthView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:gravity="right"
-                android:text="1.5 hrs"/>
 
-            <SeekBar
-                android:id="@+id/completeView"
+            android:padding="10dp">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:focusable="false"
-                android:thumbTint="@color/colorPrimary"/>
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/dateView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="right"
+                    android:gravity="right"
+                    android:text="Date Due"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/subjectView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="5dp"
+                    android:text="Subject"/>
+
+                <TextView
+                    android:id="@+id/descriptionView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/nameView"
+                    android:paddingTop="5dp"
+                    android:text="Description"
+                    android:textColor="#34495e"
+                    android:textSize="18sp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lengthView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="right"
+                        android:text="1.5 hrs"/>
+
+                    <SeekBar
+                        android:id="@+id/completeView"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:focusable="false"
+                        android:thumbTint="@color/colorPrimary"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/nameView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.14"
+                        android:text="Name"
+                        android:textColor="@android:color/black"
+                        android:textSize="24sp"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </FrameLayout>
+
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>
