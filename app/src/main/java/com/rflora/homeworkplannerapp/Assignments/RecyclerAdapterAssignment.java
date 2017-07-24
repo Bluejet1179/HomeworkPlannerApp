@@ -1,6 +1,5 @@
-package com.rflora.homeworkplannerapp;
+package com.rflora.homeworkplannerapp.Assignments;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.rflora.homeworkplannerapp.R;
+
 import java.util.List;
 
 
@@ -18,6 +19,9 @@ public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdap
     private List<Assignment> mAssignments;
     private AssignmentDatabaseHandler mDatabaseHandler;
     private AssignmentListFragment mAssignmentListFragment;
+
+
+    private Assignment undoneAssignment;
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -96,6 +100,7 @@ public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdap
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(holder.mComplete.getProgress() == 100){
+                    undoneAssignment = mAssignments.get(position);
                     mAssignments.remove(position);
                     updateDatabase();
                     if(getItemCount() == 0) {
@@ -103,7 +108,14 @@ public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdap
                     }else {
                         mAssignmentListFragment.no_HW.setVisibility(View.GONE);
                     }
-                    Snackbar.make(holder.itemView, "Removed Assignment", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(holder.itemView, "Removed Assignment", Snackbar.LENGTH_SHORT).setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            undoneAssignment.setComplete(0);
+                            mAssignments.add(undoneAssignment);
+                            updateDatabase();
+                        }
+                    }).show();
 
 
                 }else {

@@ -1,4 +1,4 @@
-package com.rflora.homeworkplannerapp;
+package com.rflora.homeworkplannerapp.Assignments;
 
 import android.content.Context;
 import android.support.v7.widget.DefaultItemAnimator;

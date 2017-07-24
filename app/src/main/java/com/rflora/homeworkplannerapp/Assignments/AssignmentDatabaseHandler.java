@@ -1,21 +1,17 @@
-package com.rflora.homeworkplannerapp;
+package com.rflora.homeworkplannerapp.Assignments;
 
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.rflora.homeworkplannerapp.Assignments.Assignment;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.R.attr.id;
-import static android.provider.Contacts.SettingsColumns.KEY;
 
 /**
  * Created by flora on 7/8/2017.
