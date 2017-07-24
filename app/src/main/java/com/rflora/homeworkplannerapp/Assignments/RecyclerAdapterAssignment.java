@@ -108,7 +108,7 @@ public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdap
                     }else {
                         mAssignmentListFragment.no_HW.setVisibility(View.GONE);
                     }
-                    Snackbar.make(holder.itemView, "Removed Assignment", Snackbar.LENGTH_SHORT).setAction("UNDO", new View.OnClickListener() {
+                    Snackbar.make(holder.itemView, "Removed Assignment", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             undoneAssignment.setComplete(0);
