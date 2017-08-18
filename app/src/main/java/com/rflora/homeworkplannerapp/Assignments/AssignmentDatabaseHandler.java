@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.format.Time;
 import android.util.Log;
 
-import com.rflora.homeworkplannerapp.Assignments.Assignment;
+import com.rflora.homeworkplannerapp.Subjects.Subject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +23,18 @@ public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
-    private static int mID = 0;
 
     // Database Name
     private static final String DATABASE_NAME = "assignmentBook";
+//////////////////////////////////////////////////////////////////////
+    // Subjects table name
+    private static final String TABLE_SUBJECTS = "Subjects";
+
+    // Column names
+    private static final String KEY_SUBJECT_ID = "_id";
+    private static final String KEY_SUBJECT_NAME = "name";
+    private static final String KEY_SUBJECT_END_TIME = "endTime";
+/////////////////////////////////////////////////////////////////////
 
     // Contacts table name
     private static final String TABLE_ASSIGNMENTS = "Assignments";
@@ -35,7 +43,6 @@ public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ID = "_id";
     private static final String KEY_NAME = "name";
     private static final String KEY_DESCRIPTION = "descrption";
-    //private static final String KEY_DAYDUE = "dayDue";
 
     private static final String KEY_DAYDUE = "dayDue";
     private static final String KEY_MONTHDUE = "monthDue";
@@ -52,6 +59,7 @@ public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
+
         String CREATE_ASSIGNMENTS_TABLE = "CREATE TABLE " + TABLE_ASSIGNMENTS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_NAME + " TEXT,"
@@ -62,7 +70,14 @@ public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
                 + KEY_LENGTH + " REAL,"
                 + KEY_SUBJECT + " TEXT,"
                 + KEY_ISCOMPLETE + " INTEGER" + ")";
+
+        String CREATE_SUBJECTS_TABLE = "CREATE TABLE " + TABLE_SUBJECTS + "("
+                + KEY_SUBJECT_ID + " INTEGER PRIMARY KEY,"
+                + KEY_SUBJECT_NAME + " TEXT,"
+                + KEY_SUBJECT_END_TIME + " INTEGER" + ")";
+
         db.execSQL(CREATE_ASSIGNMENTS_TABLE);
+        db.execSQL(CREATE_SUBJECTS_TABLE);
         Log.d("SQL", "Created Database(onCreate)");
     }
 
@@ -71,6 +86,8 @@ public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSIGNMENTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SUBJECTS);
+
 
         // Create tables again
         onCreate(db);
@@ -123,18 +140,6 @@ public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
 
 
     }
-
-    public Cursor getCursor(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT  * FROM " + TABLE_ASSIGNMENTS;
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-
-        Log.d("SQL", "Cursor size " + cursor.getCount());
-
-        return cursor;
-    }
-
 
     // Getting single assignment
     public Assignment getAssignment(int id) {
@@ -236,6 +241,124 @@ public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
         }
 
     }
+////////////////////////////////////////////////////////////////////////////////////////
+
+    public void addSubject(Subject subject){
+        Log.d("SQL", "Attempting to add subject");
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_SUBJECT_NAME, subject.getName());
+        values.put(KEY_SUBJECT_END_TIME, subject.getEndTimeMinutes());
+
+        // Inserting Row
+        db.insert(TABLE_SUBJECTS, null, values);
+        db.close(); // Closing database connection
+        Log.d("SQL", "Added Subject " + subject.getName() + ", " + subject.getID());
+    }
+
+    public void addSubjects(List<Subject> subjectList){
+        for(Subject subject: subjectList){
+            addSubject(subject);
+        }
+        Log.d("SQL", "Added " + subjectList.size() + " subjects");
+    }
+
+    public Subject getSubject(int id){
+        Log.d("SQL", "Attempting to get subject with ID: " + id);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_SUBJECTS,
+                new String[] { KEY_SUBJECT_ID, KEY_SUBJECT_NAME, KEY_SUBJECT_END_TIME },
+                KEY_SUBJECT_ID + "=?",
+                new String[] { String.valueOf(id) },
+                null, null, null, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+        Subject subject = new Subject(cursor.getString(1), cursor.getInt(2), cursor.getInt(0));//name, endtime, id
+        // return subject
+        Log.d("SQL", "Got subject " + subject.getName() + ", " + subject.getID());
+        cursor.close();
+        return subject;
+    }
+
+    public void deleteSubject(Subject subject){
+        Log.d("SQL", "Attempting to delete subject " + subject.getName() + ", " + subject.getID());
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_SUBJECTS, KEY_SUBJECT_ID + " = ?",
+                new String[] { String.valueOf(subject.getID()) });
+
+        db.close();
+        Log.d("SQL", "Deleted Subject: " + subject.getName() + ", " + subject.getID());
+    }
+
+    public void deleteSubject(int id){
+        Log.d("SQL", "Attempting to delete subject " + id);
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_SUBJECTS, KEY_SUBJECT_ID + " = ?",
+                new String[] { String.valueOf(id) });
+
+        db.close();
+        Log.d("SQL", "Deleted Subject: " + id);
+    }
+
+    public void deleteAllSubjects(){
+        Log.d("SQL", "Attempting to delete all subjects");
+        List<Subject> subjects = getAllSubjects();
+        for(Subject subject: subjects){
+            deleteSubject(subject);
+        }
+        Log.d("SQL", "Deleted all subjects");
+    }
+
+    public int updateSubject(Subject subject){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_SUBJECT_NAME, subject.getName());
+        values.put(KEY_SUBJECT_END_TIME, subject.getEndTimeMinutes());
+        Log.d("SQL", "Updating Subject: " + subject.getName() + ", " + subject.getID());
+        return db.update(TABLE_SUBJECTS, values, KEY_SUBJECT_ID + " = ?",
+                new String[] { String.valueOf(subject.getID()) });
+    }
+
+    public int getSubjectsCount() {
+        String countQuery = "SELECT  * FROM " + TABLE_SUBJECTS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        // cursor.close();
+
+        // return count
+        return cursor.getCount();
+    }
+
+    public List<Subject> getAllSubjects(){
+        List<Subject> subjectList = new ArrayList<Subject>();
+
+        String selectQuery = "SELECT  * FROM " + TABLE_SUBJECTS;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                // Adding assignment to list
+                subjectList.add(getSubject(cursor.getInt(0))
+                );
+            } while (cursor.moveToNext());
+        }
+
+        // return contact list
+        return subjectList;
+    }
+
+    public void updateAllSubjects(List<Subject> subjectList){
+        deleteAllSubjects();
+        addSubjects(subjectList);
+    }
+
 
 
 

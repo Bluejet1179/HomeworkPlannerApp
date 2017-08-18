@@ -17,8 +17,10 @@ import android.widget.TextView;
 
 import com.rflora.homeworkplannerapp.Assignments.AddAssignmentActivity;
 import com.rflora.homeworkplannerapp.Assignments.Assignment;
+import com.rflora.homeworkplannerapp.Assignments.AssignmentDatabaseHandler;
 import com.rflora.homeworkplannerapp.Assignments.AssignmentListFragment;
 import com.rflora.homeworkplannerapp.R;
+import com.rflora.homeworkplannerapp.Subjects.Subject;
 
 public class MainActivityTabs extends AppCompatActivity {
 
@@ -51,14 +53,16 @@ public class MainActivityTabs extends AppCompatActivity {
 
 
 
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-
+//TODO:Add button to add subjects
 
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(getApplicationContext(), AddAssignmentActivity.class);
 
                 startActivity(intent);
@@ -68,11 +72,6 @@ public class MainActivityTabs extends AppCompatActivity {
         );
     }
 
-
-        public void addAssignmentFromActivity(Assignment assignment){
-            AssignmentListFragment mAssignmentfragment = (AssignmentListFragment) getSupportFragmentManager().findFragmentByTag(getFragmentTag(0));
-            mAssignmentfragment.addAssignment(assignment);
-        }
 
 
 
@@ -105,35 +104,6 @@ public class MainActivityTabs extends AppCompatActivity {
     }
 
 
-    /**
-     * A placeholder fragment containing a simple view.(Classes)
-     */
-
-    public static class PlaceholderFragment extends Fragment {
-
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main_activity_tabs, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText("Classes");
-            return rootView;
-        }
-    }
 
 
 
