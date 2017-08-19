@@ -92,7 +92,18 @@ public class MainActivityTabs extends AppCompatActivity {
 
             //noinspection SimplifiableIfStatement
             if (id == R.id.action_settings) {
-                //TODO:Add settings screen
+                //TODO:Refine subjects interface
+                //TODO:Add dialog for subjects
+                //TODO:Get notification preferences stored in database
+                //TODO:Change the subject field in assignment builder to have a dropdown list of subject names
+                //TODO:Add settings screen with nightly hw reminders and in app purchase to remove ads
+                //TODO:Set up an admob account and add a smart banner on the bottom of the app
+                //TODO:Get the in app purchasing working
+                //TODO:Get notifications working(execute at end time and give yes and no option to open the add assignment activity)
+                //TODO:Icon and app store page
+                //TODO:Bug testing
+                //TODO:Publish to play store!
+
                 return true;
             }
 

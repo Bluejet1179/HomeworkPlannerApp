@@ -27,7 +27,6 @@ public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdap
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        //TODO:Add all views into constructor
         public TextView mName;
         public TextView mDateDue;
         public TextView mDescription;
@@ -59,7 +58,6 @@ public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdap
     @Override
     public RecyclerAdapterAssignment.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
-        //TODO: Link up views
         // create a new view
         View v = (View) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.assignment_row, parent, false);
@@ -73,7 +71,6 @@ public class RecyclerAdapterAssignment extends RecyclerView.Adapter<RecyclerAdap
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        //TODO:Get data from list and set data to viewholder
         holder.mName.setText(mAssignments.get(position).getName());
         holder.mDescription.setText(mAssignments.get(position).getDescription());
         holder.mSubject.setText(mAssignments.get(position).getSubject());

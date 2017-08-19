@@ -28,7 +28,6 @@ private FragmentManager mFragmentManager;
 
             return assignmentListFragment;
         }else {
-            //TODO:Subject fragment
             SubjectListFragment subjectListFragment = new SubjectListFragment();
            return  subjectListFragment;
         }
