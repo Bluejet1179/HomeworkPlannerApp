@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.rflora.homeworkplannerapp.Base.MainActivityTabs;
 import com.rflora.homeworkplannerapp.R;
 
@@ -32,10 +33,12 @@ public class AddAssignmentActivity extends AppCompatActivity implements View.OnC
     private EditText mDescription;
     private Time dateDue;
     private boolean flag = false;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         setContentView(R.layout.activity_add_assignment2);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar2);
@@ -58,6 +61,10 @@ public class AddAssignmentActivity extends AppCompatActivity implements View.OnC
                 if(checkValues()){
                     AssignmentDatabaseHandler databaseHandler = new AssignmentDatabaseHandler(getApplicationContext());
                     databaseHandler.addAssignment(assignment);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mName.getText().toString());
+                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Assignment");
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                     Intent intent = new Intent(getApplicationContext(), MainActivityTabs.class);
                     startActivity(intent);
                 }

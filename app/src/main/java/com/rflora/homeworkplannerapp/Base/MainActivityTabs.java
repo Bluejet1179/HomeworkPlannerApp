@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.rflora.homeworkplannerapp.Assignments.AddAssignmentActivity;
 import com.rflora.homeworkplannerapp.Assignments.Assignment;
 import com.rflora.homeworkplannerapp.Assignments.AssignmentDatabaseHandler;
@@ -28,6 +34,8 @@ public class MainActivityTabs extends AppCompatActivity {
     private CustomViewPager mViewPager;
     private Activity mActivity = this;
     private FloatingActionButton mActionButton;
+    private AdView mAdView;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     @Override
@@ -47,8 +55,12 @@ public class MainActivityTabs extends AppCompatActivity {
         mViewPager.setPagingEnabled(false);
         mActionButton = (FloatingActionButton) findViewById(R.id.fab);
 
-
-
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        MobileAds.initialize(this,"ca-app-pub-5488885107013405/1612346992");
+        mAdView = (AdView) findViewById(R.id.bottom_adview);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        //TODO:Change app unit id to one from admob
 
 
 
@@ -92,12 +104,10 @@ public class MainActivityTabs extends AppCompatActivity {
 
             //noinspection SimplifiableIfStatement
             if (id == R.id.action_settings) {
-                //TODO:Refine subjects interface
                 //TODO:Add dialog for subjects
                 //TODO:Get notification preferences stored in database
                 //TODO:Change the subject field in assignment builder to have a dropdown list of subject names
                 //TODO:Add settings screen with nightly hw reminders and in app purchase to remove ads
-                //TODO:Set up an admob account and add a smart banner on the bottom of the app
                 //TODO:Get the in app purchasing working
                 //TODO:Get notifications working(execute at end time and give yes and no option to open the add assignment activity)
                 //TODO:Icon and app store page
