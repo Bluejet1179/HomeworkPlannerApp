@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/custom_dialog_layout_design_user_input"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="16dp">
+
+    <EditText
+        android:id="@+id/dialog_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Name"
+        android:inputType="textPersonName"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Class Ending Time"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"/>
+
+    <TimePicker
+        android:id="@+id/dialog_timepicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:headerBackground="@color/colorAccent"
+        android:headerTimeTextAppearance="@style/TextAppearance.AppCompat"
+        android:numbersSelectorColor="@color/colorAccent"
+        android:numbersTextColor="@android:color/black"/>
+</LinearLayout>

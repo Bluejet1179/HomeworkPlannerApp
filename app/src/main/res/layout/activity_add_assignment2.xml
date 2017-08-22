@@ -51,25 +51,31 @@
                 android:layout_height="wrap_content"
                 android:hint="Length to Complete(hrs)"
                 android:inputType="numberDecimal"/>
+
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="Subject"
+            android:textSize="18sp"/>
 
-            <EditText
-                android:id="@+id/edit_subject"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Subject"/>
-
-        </android.support.design.widget.TextInputLayout>
+        <Spinner
+            android:id="@+id/subject_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
             android:text="Due Date"
             android:textSize="18sp"/>
 

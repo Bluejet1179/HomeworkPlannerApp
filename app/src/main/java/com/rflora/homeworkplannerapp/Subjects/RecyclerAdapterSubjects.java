@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.rflora.homeworkplannerapp.Assignments.AssignmentDatabaseHandler;
@@ -35,11 +36,13 @@ public class RecyclerAdapterSubjects extends RecyclerView.Adapter<RecyclerAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mName;
         public TextView mEndTime;
+        public Switch mNotifications;
 
         public ViewHolder(View v) {
             super(v);
             mName = (TextView) v.findViewById(R.id.text_subject_name);
             mEndTime = (TextView) v.findViewById(R.id.text_end_time);
+            mNotifications = (Switch) v.findViewById(R.id.notification_option);
         }
 
     }
@@ -58,7 +61,7 @@ public class RecyclerAdapterSubjects extends RecyclerView.Adapter<RecyclerAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mName.setText(mSubjectList.get(position).getName());
         int hours = mSubjectList.get(position).getEndTimeMinutes() / 60;
         int minutes = mSubjectList.get(position).getEndTimeMinutes() % 60;
@@ -67,6 +70,14 @@ public class RecyclerAdapterSubjects extends RecyclerView.Adapter<RecyclerAdapte
         }else {
             holder.mEndTime.setText(hours + ":" + "0" + minutes);
         }
+        holder.mNotifications.setChecked(mSubjectList.get(position).notificationBool());
+        holder.mNotifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSubjectList.get(position).setNotifications(holder.mNotifications.isChecked());
+                updateDatabase();
+            }
+        });
     }
 
     @Override

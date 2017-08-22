@@ -1,11 +1,12 @@
 package com.rflora.homeworkplannerapp.Base;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,20 +14,22 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 import com.rflora.homeworkplannerapp.Assignments.AddAssignmentActivity;
-import com.rflora.homeworkplannerapp.Assignments.Assignment;
 import com.rflora.homeworkplannerapp.Assignments.AssignmentDatabaseHandler;
-import com.rflora.homeworkplannerapp.Assignments.AssignmentListFragment;
 import com.rflora.homeworkplannerapp.R;
 import com.rflora.homeworkplannerapp.Subjects.Subject;
+import com.rflora.homeworkplannerapp.Subjects.SubjectListFragment;
+
+import static android.R.attr.animationDuration;
+import static android.R.attr.id;
 
 public class MainActivityTabs extends AppCompatActivity {
 
@@ -66,18 +69,49 @@ public class MainActivityTabs extends AppCompatActivity {
 
 
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-//TODO:Add button to add subjects
 
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getApplicationContext(), AddAssignmentActivity.class);
+                if(tabLayout.getSelectedTabPosition() == 0) {
+                    Intent intent = new Intent(getApplicationContext(), AddAssignmentActivity.class);
+                    startActivity(intent);
+                }else {
+                    LayoutInflater layoutInflater = LayoutInflater.from(getApplicationContext());
+                    View mView = layoutInflater.inflate(R.layout.add_subject_dialog, null);
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivityTabs.this);
+                    dialog.setView(mView);
+                    final EditText name = (EditText)mView.findViewById(R.id.dialog_name);
+                    final TimePicker timePicker = (TimePicker)mView.findViewById(R.id.dialog_timepicker);
+                    dialog.setCancelable(false)
+                            .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Build and add class
+                                   int minutes = timePicker.getHour() * 60 + timePicker.getMinute();
+                                    Subject subject = new Subject(name.getText().toString(), minutes, false);
+                                    AssignmentDatabaseHandler db = new AssignmentDatabaseHandler(getApplicationContext());
+                                    db.addSubject(subject);
+                                    SubjectListFragment subjectListFragment =(SubjectListFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
+                                    subjectListFragment.update();
 
-                startActivity(intent);
+                                    Log.d("Dialog", "Added subject" + name.getText().toString() + minutes);
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            })
+                            .setTitle("Add a Class");
+                    AlertDialog subjectDialog = dialog.create();
+                    subjectDialog.show();
+                }
             }
 
             }
@@ -104,9 +138,6 @@ public class MainActivityTabs extends AppCompatActivity {
 
             //noinspection SimplifiableIfStatement
             if (id == R.id.action_settings) {
-                //TODO:Add dialog for subjects
-                //TODO:Get notification preferences stored in database
-                //TODO:Change the subject field in assignment builder to have a dropdown list of subject names
                 //TODO:Add settings screen with nightly hw reminders and in app purchase to remove ads
                 //TODO:Get the in app purchasing working
                 //TODO:Get notifications working(execute at end time and give yes and no option to open the add assignment activity)

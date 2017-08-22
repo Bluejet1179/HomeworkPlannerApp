@@ -34,6 +34,7 @@ public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_SUBJECT_ID = "_id";
     private static final String KEY_SUBJECT_NAME = "name";
     private static final String KEY_SUBJECT_END_TIME = "endTime";
+    private static final String KEY_NOTIFICATIONS = "notifications";
 /////////////////////////////////////////////////////////////////////
 
     // Contacts table name
@@ -74,7 +75,8 @@ public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
         String CREATE_SUBJECTS_TABLE = "CREATE TABLE " + TABLE_SUBJECTS + "("
                 + KEY_SUBJECT_ID + " INTEGER PRIMARY KEY,"
                 + KEY_SUBJECT_NAME + " TEXT,"
-                + KEY_SUBJECT_END_TIME + " INTEGER" + ")";
+                + KEY_SUBJECT_END_TIME + " INTEGER,"
+                + KEY_NOTIFICATIONS + " INTEGER" + ")";
 
         db.execSQL(CREATE_ASSIGNMENTS_TABLE);
         db.execSQL(CREATE_SUBJECTS_TABLE);
@@ -250,6 +252,7 @@ public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_SUBJECT_NAME, subject.getName());
         values.put(KEY_SUBJECT_END_TIME, subject.getEndTimeMinutes());
+        values.put(KEY_NOTIFICATIONS, subject.isNotifications());
 
         // Inserting Row
         db.insert(TABLE_SUBJECTS, null, values);
@@ -268,7 +271,7 @@ public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
         Log.d("SQL", "Attempting to get subject with ID: " + id);
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_SUBJECTS,
-                new String[] { KEY_SUBJECT_ID, KEY_SUBJECT_NAME, KEY_SUBJECT_END_TIME },
+                new String[] { KEY_SUBJECT_ID, KEY_SUBJECT_NAME, KEY_SUBJECT_END_TIME, KEY_NOTIFICATIONS },
                 KEY_SUBJECT_ID + "=?",
                 new String[] { String.valueOf(id) },
                 null, null, null, null);
@@ -276,7 +279,13 @@ public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
         if (cursor != null) {
             cursor.moveToFirst();
         }
-        Subject subject = new Subject(cursor.getString(1), cursor.getInt(2), cursor.getInt(0));//name, endtime, id
+        boolean not;
+        if(cursor.getInt(3) == 1){
+            not = true;
+        }else {
+            not = false;
+        }
+        Subject subject = new Subject(cursor.getString(1), cursor.getInt(2), cursor.getInt(0), not);//name, endtime, id
         // return subject
         Log.d("SQL", "Got subject " + subject.getName() + ", " + subject.getID());
         cursor.close();
@@ -318,6 +327,7 @@ public class AssignmentDatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_SUBJECT_NAME, subject.getName());
         values.put(KEY_SUBJECT_END_TIME, subject.getEndTimeMinutes());
+        values.put(KEY_NOTIFICATIONS, subject.isNotifications());
         Log.d("SQL", "Updating Subject: " + subject.getName() + ", " + subject.getID());
         return db.update(TABLE_SUBJECTS, values, KEY_SUBJECT_ID + " = ?",
                 new String[] { String.valueOf(subject.getID()) });

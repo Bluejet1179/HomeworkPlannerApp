@@ -8,6 +8,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,6 +123,7 @@ public class SubjectListFragment extends Fragment {
     public void onPause() {
         super.onPause();
         mAdapterSubjects.updateDatabase();
+        update();
 
     }
 
@@ -134,6 +136,11 @@ public class SubjectListFragment extends Fragment {
 
     public int size(){
         return mAdapterSubjects.getItemCount();
+    }
+
+    public void update(){
+        mAdapterSubjects.updateList();
+        Log.d("SQL", "Updated Subject Fragment");
     }
 
 
